@@ -1,0 +1,12 @@
+﻿@using EventEase.Data
+
+<div class="card m-2 p-3 border rounded shadow-sm">
+    <h3>@EventData.Name</h3>
+    <p><strong>Date:</strong> @EventData.Date.ToString("MMMM dd, yyyy")</p>
+    <p><strong>Location:</strong> @EventData.Location</p>
+</div>
+
+@code {
+    [Parameter]
+    public Event EventData { get; set; } = new();
+}
