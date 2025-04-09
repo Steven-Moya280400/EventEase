@@ -1,0 +1,36 @@
+﻿@page "/events/{Id:int}"
+@using EventEase.Components
+@using EventEase.Data
+@inject NavigationManager Navigation
+
+<h2>Event Details</h2>
+
+@if (eventData == null)
+{
+    <div class="alert alert-danger">
+        Event not found. <a href="/events">Go back to events</a>
+    </div>
+}
+else
+{
+    <EventCard EventData="eventData" />
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Event? eventData;
+
+    private List<Event> allEvents = new()
+    {
+        new Event { Id = 1, Name = "Tech Conference 2025", Date = new DateTime(2025, 5, 15), Location = "San José" },
+        new Event { Id = 2, Name = "Summer Gala", Date = new DateTime(2025, 6, 1), Location = "Cartago" },
+        new Event { Id = 3, Name = "Developer Meetup", Date = new DateTime(2025, 6, 20), Location = "Heredia" }
+    };
+
+    protected override void OnInitialized()
+    {
+        eventData = allEvents.FirstOrDefault(e => e.Id == Id);
+    }
+}

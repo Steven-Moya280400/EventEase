@@ -4,10 +4,9 @@
 
 <h2>Upcoming Events</h2>
 
-@foreach (var ev in EventList)
-{
+<Virtualize Items="@EventList" Context="ev">
     <EventCard EventData="ev" />
-}
+</Virtualize>
 
 @code {
     private List<Event> EventList = new()

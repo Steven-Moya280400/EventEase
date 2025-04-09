@@ -1,10 +1,19 @@
 ﻿@using EventEase.Data
 
-<div class="card m-2 p-3 border rounded shadow-sm">
-    <h3>@EventData.Name</h3>
-    <p><strong>Date:</strong> @EventData.Date.ToString("MMMM dd, yyyy")</p>
-    <p><strong>Location:</strong> @EventData.Location</p>
-</div>
+@if (EventData == null || string.IsNullOrWhiteSpace(EventData.Name))
+{
+    <div class="alert alert-warning">Invalid event data</div>
+}
+else
+{
+    <a style="text-decoration:none; color:initial;" href="/events/@EventData.Id">
+        <div class="card m-2 p-3 border rounded shadow-sm">
+            <h3>@EventData.Name</h3>
+            <p><strong>Date:</strong> @EventData.Date.ToString("MMMM dd, yyyy")</p>
+            <p><strong>Location:</strong> @EventData.Location</p>
+        </div>
+    </a>
+}
 
 @code {
     [Parameter]
