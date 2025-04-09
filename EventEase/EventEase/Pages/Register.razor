@@ -1,0 +1,71 @@
+﻿@page "/register"
+@using EventEase.Data
+@using System.Text.Json
+@inject NavigationManager Navigation
+@inject IJSRuntime _jsRuntime;
+
+<h3>Register for Event</h3>
+
+@if (userRegisterd != null)
+{
+
+    <p>User registerd</p>
+    <p>Name: @userRegisterd.Name</p>
+    <p>Email: @userRegisterd.Email</p>
+}
+
+
+<EditForm Model="@user" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <InputText id="name" class="form-control" @bind-Value="user.Name" />
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <InputText id="email" class="form-control" @bind-Value="user.Email" />
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+@code {
+    private User user = new User();
+    private User? userRegisterd = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUser();
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        await SaveUser(user);
+        user = new();
+    }
+
+    private async Task SaveUser(User newUserRegistered)
+    {
+        await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "user", JsonSerializer.Serialize(newUserRegistered));
+        userRegisterd = newUserRegistered;
+    }
+
+    public async Task LoadUser()
+    {
+        try
+        {
+            string userSaved = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "user");
+
+            if (!string.IsNullOrWhiteSpace(userSaved))
+                userRegisterd = JsonSerializer.Deserialize<User>(await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "user"));
+        }
+        catch
+        {
+            userRegisterd = null;
+        }
+
+    }
+}
